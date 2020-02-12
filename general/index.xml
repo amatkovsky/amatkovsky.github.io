@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Random posts</title>
-    <link>http://amatkovsky.github.io/</link>
-    <description>Recent content on Random posts</description>
+    <title>Generals on Random posts</title>
+    <link>http://amatkovsky.github.io/general/</link>
+    <description>Recent content in Generals on Random posts</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Feb 2020 18:12:13 +0200</lastBuildDate>
     
-	<atom:link href="http://amatkovsky.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://amatkovsky.github.io/general/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
