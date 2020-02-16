@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Flutters on Random posts</title>
+    <title>Flutter on Random posts</title>
     <link>http://amatkovsky.github.io/flutter/</link>
-    <description>Recent content in Flutters on Random posts</description>
+    <description>Recent content in Flutter on Random posts</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Feb 2020 18:58:27 +0200</lastBuildDate>
@@ -17,6 +17,15 @@
       <pubDate>Wed, 12 Feb 2020 18:58:27 +0200</pubDate>
       
       <guid>http://amatkovsky.github.io/flutter/project-idea/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>What is this blog about?</title>
+      <link>http://amatkovsky.github.io/flutter/about/</link>
+      <pubDate>Wed, 12 Feb 2020 18:12:13 +0200</pubDate>
+      
+      <guid>http://amatkovsky.github.io/flutter/about/</guid>
       <description></description>
     </item>
     
