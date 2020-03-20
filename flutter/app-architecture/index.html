@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>App Architecture &middot; Random posts</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Random posts" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">Random posts</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/flutter/">
+                
+                <span>Flutter</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-02-16 19:01:12 &#43;0200 EET">February 16, 2020</time>
+</div>
+		<h1 class="post-title">App Architecture</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>One of the goals of the pet project is to get familiar with Flutter architecture approaches.
+Unfortunately, there are no official recommendations from the Flutter team.</p>
+<p>It seems that the most popular pattern is something called BLoc.
+BLoC has been developed at Google and stands for <strong>B</strong>usiness <strong>L</strong>ogic <strong>C</strong>omponent.</p>
+<p>BLoC is:</p>
+<ul>
+<li>an encapsulation of business logic;</li>
+<li>reactive (exposes a <code>Stream</code> of data).</li>
+<li>abstracted from ui details;</li>
+<li>independent from platform and environment.</li>
+</ul>
+<p>The fact that BLoC has no references to the view in any and instead exposes the data for the view to use
+should ring the bell for Android developers. In this aspect it is similar to the Android <code>ViewModel</code>.</p>
+<p>The library by the pattern authors provides a lot of useful stuff besides the basic BLoC class.
+There are BLoC builders, BLoC provider, something that looks like state reducing and more.
+While it may sound tempting to use the library I am going to implement the pattern myself.
+This way I will fully experience all the pros and cons.</p>
+<p>I started with the basic template of the BLoc to see what it looks like.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bloc</span> {
+  <span style="color:#66d9ef">void</span> dispose();
+}
+</code></pre></div><p>Since BLoCs are reactive we need a mechanism to cancel the stream subscription after the BLoC is no longer in use.
+Note for Android developers: this is something like <code>onCleared</code> method of <code>ViewModel</code>.</p>
+<p>Time to create the first screen of the app and the first BLoC for it.
+The screen will display a list of items fetched from the Firebase Cloudstore.</p>
+<p>This BLoC will be quite trivial. Its job is to expose the stream of questions list.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QuestionListBloc</span> <span style="color:#66d9ef">extends</span> Bloc {
+  Stream<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Question<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">get</span> questions <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> Firestore.instance
+      .collection(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">test_questions</span><span style="color:#e6db74">&#34;</span>)
+      .snapshots()
+      .map((snapshot) <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> snapshot.documents
+          .map(
+              (doc) <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> Question(doc.documentID, doc.data[<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">question</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">as</span> <span style="color:#66d9ef">String</span>))
+          .toList());
+
+  <span style="color:#960050;background-color:#1e0010">@</span>override
+  <span style="color:#66d9ef">void</span> dispose() {}
+}
+</code></pre></div><p>Now is the time to somehow use the BLoC to get the items to the widgets.
+I need some kind of generic solution to provide the BLoCs.
+The simplest way is to create a stateful widget that will host the bloc.
+This widget (it will be called BlocProvider, obviously) will live higher in the widget hierarchy than the widget that needs the bloc.
+The child widget will look up the provider via <code>findAncestorWidgetOfExactType</code> method of <code>BuildContext</code> and access the bloc.</p>
+<p>Other widgets that are down the tree from the <code>BlocProvider</code> can also look up and get the BLoC by its type. This allows us to create and provide BLoCs of different granularity:
+BLoCs that are needed only by a single widget and BLoCs that manage some wider logic and state, even app-wide BLoCs.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BlocProvider</span><span style="color:#f92672">&lt;</span>T <span style="color:#66d9ef">extends</span> Bloc<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> StatefulWidget {
+  <span style="color:#66d9ef">final</span> Widget child;
+  <span style="color:#66d9ef">final</span> T bloc;
+
+  <span style="color:#66d9ef">const</span> BlocProvider({Key key, <span style="color:#960050;background-color:#1e0010">@</span>required <span style="color:#66d9ef">this</span>.bloc, <span style="color:#960050;background-color:#1e0010">@</span>required <span style="color:#66d9ef">this</span>.child})
+      <span style="color:#f92672">:</span> <span style="color:#66d9ef">super</span>(key: key);
+
+  <span style="color:#66d9ef">static</span> T of<span style="color:#f92672">&lt;</span>T <span style="color:#66d9ef">extends</span> Bloc<span style="color:#f92672">&gt;</span>(BuildContext context) {
+    <span style="color:#66d9ef">final</span> BlocProvider<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> provider <span style="color:#f92672">=</span> context.findAncestorWidgetOfExactType();
+    <span style="color:#66d9ef">return</span> provider.bloc;
+  }
+
+  <span style="color:#960050;background-color:#1e0010">@</span>override
+  State createState() <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> _BlocProviderState();
+}
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_BlocProviderState</span> <span style="color:#66d9ef">extends</span> State<span style="color:#f92672">&lt;</span>BlocProvider<span style="color:#f92672">&gt;</span> {
+  <span style="color:#960050;background-color:#1e0010">@</span>override
+  Widget build(BuildContext context) <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> widget.child;
+
+  <span style="color:#960050;background-color:#1e0010">@</span>override
+  <span style="color:#66d9ef">void</span> dispose() {
+    widget.bloc.dispose();
+    <span style="color:#66d9ef">super</span>.dispose();
+  }
+}
+</code></pre></div><p>Now let&rsquo;s wrap the <code>QuestionListWidget</code> with <code>BlocProvider</code> so it can access the <code>QuestionListBloc</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyHomePage</span> <span style="color:#66d9ef">extends</span> StatelessWidget {
+  MyHomePage({Key key, <span style="color:#66d9ef">this</span>.title}) <span style="color:#f92672">:</span> <span style="color:#66d9ef">super</span>(key: key);
+
+  <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">String</span> title;
+
+  <span style="color:#960050;background-color:#1e0010">@</span>override
+  Widget build(BuildContext context) {
+    <span style="color:#66d9ef">return</span> Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Center(
+        child: BlocProvider<span style="color:#f92672">&lt;</span>QuestionListBloc<span style="color:#f92672">&gt;</span>(
+            bloc: QuestionListBloc(),
+            child: QuestionListWidget()),
+      ),
+    );
+  }
+}
+</code></pre></div><p>Getting access to the bloc inside the <code>QuestionListWidget</code> is now a piece of cake:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart">BlocProvider.of<span style="color:#f92672">&lt;</span>QuestionListBloc<span style="color:#f92672">&gt;</span>(context)
+</code></pre></div><p>Looks a bit like magic. Let&rsquo;s find out how it works.
+Flutter is based on a very simple idea: your app is just a tree of widgets.
+The widget <code>BlocProvider&lt;QuestionListBloc&gt;</code> is a parent or an ancestor of the widget <code>QuestionListWidget</code>.
+Using the <code>BuildContext</code> (a class that describes the context in which the widget is built and its position in the tree) when building <code>QuestionListWidget</code>
+I can look up the ancestor that has the the type of <code>BlocProvider&lt;QuestionListBloc&gt;</code>.
+<code>BuildContext</code> has the method exactly for that: <code>T findAncestorWidgetOfExactType&lt;T extends Widget&gt;();</code>. How cool is that Dart does not erase the type parameters in runtime. Right, Java?</p>
+<p>Now I have one piece left: using the stream that emits lists of questions to actually display something on the screen.
+Turns out, Flutter has a widget (of course) exactly for that. It is called <code>StreamBuilder</code> and using it is very easy:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dart" data-lang="dart"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QuestionListWidget</span> <span style="color:#66d9ef">extends</span> StatelessWidget {
+  <span style="color:#960050;background-color:#1e0010">@</span>override
+  Widget build(BuildContext context) {
+    <span style="color:#66d9ef">return</span> StreamBuilder<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Question<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>(
+      stream: BlocProvider.of<span style="color:#f92672">&lt;</span>QuestionListBloc<span style="color:#f92672">&gt;</span>(context).questions,
+      builder: (context,  AsyncSnapshot<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Question<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> snapshot) {
+        <span style="color:#66d9ef">if</span> (snapshot.hasData) {
+          <span style="color:#66d9ef">return</span> _questionList(snapshot.data);
+        }
+        <span style="color:#66d9ef">if</span> (snapshot.hasError) {
+          <span style="color:#66d9ef">throw</span> Exception(snapshot.error);
+        }
+
+        <span style="color:#66d9ef">switch</span> (snapshot.connectionState) {
+          <span style="color:#66d9ef">case</span> ConnectionState.none:
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">const</span> Text(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">None.</span><span style="color:#e6db74">&#34;</span>);
+          <span style="color:#66d9ef">case</span> ConnectionState.waiting:
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">const</span> Text(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Waiting.</span><span style="color:#e6db74">&#34;</span>);
+          <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+            <span style="color:#66d9ef">throw</span> Exception(
+                <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Unexpected connectionState: </span><span style="color:#e6db74">${</span>snapshot.connectionState<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>);
+        }
+      },
+    );
+  }
+}
+
+</code></pre></div><p>What it does is it subscribes to the provided stream and calls the builder method each time something happens: a new item has been emitted, the stream has failed or it has completed.
+My job is to return a proper widget depending on the data in <code>AsyncSnapshot</code>.</p>
+<p>I have omitted some details like creating lists and rows because it would bloat the post and is quite trivial. The setup of Cloudstore and why I chose it will be covered in another post.</p>
+<p>You can find the whole source code of the project in the Github repo here: <a href="https://github.com/amatkovsky/CommunicateThis">https://github.com/amatkovsky/CommunicateThis</a>.</p>
+<p>The following articles and resources have been an amazing help while getting started with Flutter architecture and the BLoC patter. Give them a read:</p>
+<ul>
+<li><a href="https://www.didierboelens.com/2018/08/reactive-programming---streams---bloc/">https://www.didierboelens.com/2018/08/reactive-programming---streams---bloc/</a></li>
+<li><a href="https://habr.com/ru/post/438524/">https://habr.com/ru/post/438524/</a></li>
+<li><a href="https://www.raywenderlich.com/4074597-getting-started-with-the-bloc-pattern">https://www.raywenderlich.com/4074597-getting-started-with-the-bloc-pattern</a></li>
+<li><a href="https://www.youtube.com/watch?v=d_m5csmrf7I">https://www.youtube.com/watch?v=d_m5csmrf7I</a></li>
+<li><a href="https://bloclibrary.dev">https://bloclibrary.dev</a></li>
+<li><a href="https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple">https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple</a></li>
+</ul>
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/flutter/project-idea/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-03-20 23:30:35.334893 &#43;0200 EET m=&#43;0.060918502">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
