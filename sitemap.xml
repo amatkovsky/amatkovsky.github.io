@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://amatkovsky.github.io/flutter/app-architecture/</loc>
-    <lastmod>2020-02-16T19:01:12+02:00</lastmod>
+    <loc>http://amatkovsky.github.io/flutter/</loc>
+    <lastmod>2020-03-21T12:47:25+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://amatkovsky.github.io/flutter/</loc>
-    <lastmod>2020-02-16T19:01:12+02:00</lastmod>
+    <loc>http://amatkovsky.github.io/flutter/navigation/</loc>
+    <lastmod>2020-03-21T12:47:25+02:00</lastmod>
   </url>
   
   <url>
     <loc>http://amatkovsky.github.io/</loc>
+    <lastmod>2020-03-21T12:47:25+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://amatkovsky.github.io/flutter/app-architecture/</loc>
     <lastmod>2020-02-16T19:01:12+02:00</lastmod>
   </url>
   
