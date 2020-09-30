@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Weird Android on Random posts</title>
+    <link>http://amatkovsky.github.io/weird-android/</link>
+    <description>Recent content in Weird Android on Random posts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 30 Sep 2020 18:32:09 +0300</lastBuildDate><atom:link href="http://amatkovsky.github.io/weird-android/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Weird Test Crash</title>
+      <link>http://amatkovsky.github.io/weird-android/weird-test-crash/</link>
+      <pubDate>Wed, 30 Sep 2020 18:32:09 +0300</pubDate>
+      
+      <guid>http://amatkovsky.github.io/weird-android/weird-test-crash/</guid>
+      <description>&lt;p&gt;So I have tried to run instrumentation tests by starting a corresponding gradle task: &lt;code&gt;./gradlew connectedAndroidTest&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The tests didn&amp;rsquo;t even start since the instrumentation process had crashed before that.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

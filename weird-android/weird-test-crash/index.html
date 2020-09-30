@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Weird Test Crash &middot; Random posts</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Random posts" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">Random posts</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/flutter/">
+                
+                <span>Flutter</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/weird-android/">
+                
+                <span>Weird Android</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-09-30 18:32:09 &#43;0300 EEST">September 30, 2020</time>
+</div>
+		<h1 class="post-title">Weird Test Crash</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>So I have tried to run instrumentation tests by starting a corresponding gradle task: <code>./gradlew connectedAndroidTest</code>.</p>
+<p>The tests didn&rsquo;t even start since the instrumentation process had crashed before that.</p>
+<p>Here is the stacktrace:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">NoClassDefFoundError</span><span style="color:#f92672">:</span> Failed resolution of<span style="color:#f92672">:</span> Lgroovy<span style="color:#f92672">/</span>lang<span style="color:#f92672">/</span>GroovyObject<span style="color:#f92672">;</span>
+     FATAL EXCEPTION<span style="color:#f92672">:</span> Instr<span style="color:#f92672">:</span> androidx<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">.</span><span style="color:#a6e22e">runner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AndroidJUnitRunner</span>
+Process: com<span style="color:#f92672">.</span><span style="color:#a6e22e">gelighting</span><span style="color:#f92672">.</span><span style="color:#a6e22e">cbygekit</span><span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">,</span> PID<span style="color:#f92672">:</span> 8132
+java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">NoClassDefFoundError</span><span style="color:#f92672">:</span> Failed resolution of<span style="color:#f92672">:</span> Lgroovy<span style="color:#f92672">/</span>lang<span style="color:#f92672">/</span>GroovyObject<span style="color:#f92672">;</span>
+	at java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">classForName</span><span style="color:#f92672">(</span>Native Method<span style="color:#f92672">)</span>
+	at java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>454<span style="color:#f92672">)</span>
+	at androidx<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">.</span><span style="color:#a6e22e">internal</span><span style="color:#f92672">.</span><span style="color:#a6e22e">runner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">TestLoader</span><span style="color:#f92672">.</span><span style="color:#a6e22e">doCreateRunner</span><span style="color:#f92672">(</span>TestLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>72<span style="color:#f92672">)</span>
+	at androidx<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">.</span><span style="color:#a6e22e">internal</span><span style="color:#f92672">.</span><span style="color:#a6e22e">runner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">TestLoader</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getRunnersFor</span><span style="color:#f92672">(</span>TestLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>104<span style="color:#f92672">)</span>
+	at androidx<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">.</span><span style="color:#a6e22e">internal</span><span style="color:#f92672">.</span><span style="color:#a6e22e">runner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">TestRequestBuilder</span><span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">(</span>TestRequestBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>793<span style="color:#f92672">)</span>
+	at androidx<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">.</span><span style="color:#a6e22e">runner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AndroidJUnitRunner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">buildRequest</span><span style="color:#f92672">(</span>AndroidJUnitRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>547<span style="color:#f92672">)</span>
+	at androidx<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">.</span><span style="color:#a6e22e">runner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AndroidJUnitRunner</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onStart</span><span style="color:#f92672">(</span>AndroidJUnitRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>390<span style="color:#f92672">)</span>
+	at android<span style="color:#f92672">.</span><span style="color:#a6e22e">app</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Instrumentation$InstrumentationThread</span><span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span>Instrumentation<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>2189<span style="color:#f92672">)</span>
+Caused by<span style="color:#f92672">:</span> java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ClassNotFoundException</span><span style="color:#f92672">:</span> Didn<span style="color:#960050;background-color:#1e0010">&#39;</span>t find <span style="color:#66d9ef">class</span> <span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">groovy</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">GroovyObject</span><span style="color:#e6db74">&#34; on path: DexPathList[[zip file &#34;</span><span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>app<span style="color:#f92672">/</span>com<span style="color:#f92672">.</span><span style="color:#a6e22e">gelighting</span><span style="color:#f92672">.</span><span style="color:#a6e22e">cbygekit</span><span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">-</span>tnnap1bTvChphHINNt0T8g<span style="color:#f92672">==/</span>base<span style="color:#f92672">.</span><span style="color:#a6e22e">apk</span><span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#f92672">],</span>nativeLibraryDirectories<span style="color:#f92672">=[/</span>data<span style="color:#f92672">/</span>app<span style="color:#f92672">/</span>com<span style="color:#f92672">.</span><span style="color:#a6e22e">gelighting</span><span style="color:#f92672">.</span><span style="color:#a6e22e">cbygekit</span><span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">-</span>tnnap1bTvChphHINNt0T8g<span style="color:#f92672">==/</span>lib<span style="color:#f92672">/</span>x86<span style="color:#f92672">,</span> <span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>app<span style="color:#f92672">/</span>com<span style="color:#f92672">.</span><span style="color:#a6e22e">gelighting</span><span style="color:#f92672">.</span><span style="color:#a6e22e">cbygekit</span><span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">-</span>tnnap1bTvChphHINNt0T8g<span style="color:#f92672">==/</span>base<span style="color:#f92672">.</span><span style="color:#a6e22e">apk</span><span style="color:#f92672">!/</span>lib<span style="color:#f92672">/</span>x86<span style="color:#f92672">,</span> <span style="color:#f92672">/</span>system<span style="color:#f92672">/</span>lib<span style="color:#f92672">,</span> <span style="color:#f92672">/</span>product<span style="color:#f92672">/</span>lib<span style="color:#f92672">]]</span>
+	at dalvik<span style="color:#f92672">.</span><span style="color:#a6e22e">system</span><span style="color:#f92672">.</span><span style="color:#a6e22e">BaseDexClassLoader</span><span style="color:#f92672">.</span><span style="color:#a6e22e">findClass</span><span style="color:#f92672">(</span>BaseDexClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>196<span style="color:#f92672">)</span>
+	at java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ClassLoader</span><span style="color:#f92672">.</span><span style="color:#a6e22e">loadClass</span><span style="color:#f92672">(</span>ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>379<span style="color:#f92672">)</span>
+	at java<span style="color:#f92672">.</span><span style="color:#a6e22e">lang</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ClassLoader</span><span style="color:#f92672">.</span><span style="color:#a6e22e">loadClass</span><span style="color:#f92672">(</span>ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>312<span style="color:#f92672">)</span>
+	<span style="color:#f92672">...</span> 8 more
+</code></pre></div><p>Very weird. After some hours of googling, hair-pulling and procrastinating I tried to update the version of <code>androidx.test.ext:junit</code> dependency from <code>1.1.1</code> to <code>1.1.2</code>.</p>
+<p>Turns out, this was the solution!</p>
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/flutter/navigation/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-09-30 19:40:41.075161 &#43;0300 EEST m=&#43;0.056597129">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>

@@ -6,11 +6,7 @@
     <description>Recent content in Flutter on Random posts</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Mar 2020 12:47:25 +0200</lastBuildDate>
-    
-	<atom:link href="http://amatkovsky.github.io/flutter/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 21 Mar 2020 12:47:25 +0200</lastBuildDate><atom:link href="http://amatkovsky.github.io/flutter/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Navigation</title>
       <link>http://amatkovsky.github.io/flutter/navigation/</link>
