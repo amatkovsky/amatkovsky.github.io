@@ -6,7 +6,17 @@
     <description>Recent content on Random posts</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Sep 2020 18:32:09 +0300</lastBuildDate><atom:link href="http://amatkovsky.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Oct 2020 17:27:04 +0300</lastBuildDate><atom:link href="http://amatkovsky.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Composite Builds and Flavors</title>
+      <link>http://amatkovsky.github.io/weird-android/composite-builds-and-flavors/</link>
+      <pubDate>Wed, 07 Oct 2020 17:27:04 +0300</pubDate>
+      
+      <guid>http://amatkovsky.github.io/weird-android/composite-builds-and-flavors/</guid>
+      <description>&lt;p&gt;So Gradle has this awesome feature called &amp;lsquo;Composite Builds&amp;rsquo;.
+I can include a project in my project and replace a maven dependency with a real project.&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Weird Test Crash</title>
       <link>http://amatkovsky.github.io/weird-android/weird-test-crash/</link>

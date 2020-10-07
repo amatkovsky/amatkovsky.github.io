@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Composite Builds and Flavors &middot; Random posts</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Random posts" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">Random posts</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/flutter/">
+                
+                <span>Flutter</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/weird-android/">
+                
+                <span>Weird Android</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-10-07 17:27:04 &#43;0300 EEST">October 7, 2020</time>
+</div>
+		<h1 class="post-title">Composite Builds and Flavors</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>So Gradle has this awesome feature called &lsquo;Composite Builds&rsquo;.
+I can include a project in my project and replace a maven dependency with a real project.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy">includeBuild<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;/path/to/project&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dependencySubstitution <span style="color:#f92672">{</span>
+            substitute <span style="color:#a6e22e">module</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;com.example:somelib&#34;</span><span style="color:#f92672">)</span> with project<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;:somelib&#39;</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>This works but not if the included project has product flavors.
+In such case gradle doesn&rsquo;t know how to choose the configuration to build the project and throws up with the following error:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Could not determine the dependencies of task <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">:</span>app<span style="color:#f92672">:</span>compileDebugJavaWithJavac<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">.</span>
+<span style="color:#f92672">&gt;</span> Could not resolve all task dependencies <span style="color:#66d9ef">for</span> configuration <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">:</span>app<span style="color:#f92672">:</span>debugCompileClasspath<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">.</span>
+   <span style="color:#f92672">&gt;</span> Could not resolve com<span style="color:#f92672">.</span><span style="color:#a6e22e">example</span><span style="color:#f92672">:</span>somelib<span style="color:#f92672">:</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">2</span><span style="color:#f92672">.</span><span style="color:#a6e22e">0</span>
+     Required by<span style="color:#f92672">:</span>
+         project <span style="color:#f92672">:</span>app <span style="color:#f92672">&gt;</span> project <span style="color:#f92672">:</span>data <span style="color:#f92672">&gt;</span> project <span style="color:#f92672">:</span>sdk
+      <span style="color:#f92672">&gt;</span> The consumer was configured to find an API of a component<span style="color:#f92672">,</span> as well as attribute <span style="color:#960050;background-color:#1e0010">&#39;</span>com<span style="color:#f92672">.</span><span style="color:#a6e22e">android</span><span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">.</span><span style="color:#a6e22e">api</span><span style="color:#f92672">.</span><span style="color:#a6e22e">attributes</span><span style="color:#f92672">.</span><span style="color:#a6e22e">BuildTypeAttr</span><span style="color:#960050;background-color:#1e0010">&#39;</span> with value <span style="color:#960050;background-color:#1e0010">&#39;</span>debug<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">,</span> attribute <span style="color:#960050;background-color:#1e0010">&#39;</span>org<span style="color:#f92672">.</span><span style="color:#a6e22e">jetbrains</span><span style="color:#f92672">.</span><span style="color:#a6e22e">kotlin</span><span style="color:#f92672">.</span><span style="color:#a6e22e">platform</span><span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#960050;background-color:#1e0010">&#39;</span> with value <span style="color:#960050;background-color:#1e0010">&#39;</span>androidJvm<span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">.</span> However we cannot choose between the following variants of project <span style="color:#f92672">:</span>SomeLib<span style="color:#f92672">:</span>somelib<span style="color:#f92672">&gt;]&gt;</span>
+          <span style="color:#f92672">-</span> devDebugAndroidTestCompile
+          <span style="color:#f92672">-</span> devDebugAndroidTestRuntime
+          <span style="color:#f92672">-</span> devDebugApiElements
+          <span style="color:#f92672">-</span> devDebugRuntime
+          <span style="color:#f92672">-</span> devDebugRuntimeElements
+          <span style="color:#f92672">-</span> devDebugUnitTestCompile
+          <span style="color:#f92672">-</span> devDebugUnitTestRuntime
+          <span style="color:#f92672">-</span> devReleaseRuntime
+          <span style="color:#f92672">-</span> devReleaseUnitTestCompile
+          <span style="color:#f92672">-</span> devReleaseUnitTestRuntime
+          <span style="color:#f92672">-</span> prodDebugAndroidTestCompile
+          <span style="color:#f92672">-</span> prodDebugAndroidTestRuntime
+          <span style="color:#f92672">-</span> prodDebugApiElements
+          <span style="color:#f92672">-</span> prodDebugRuntime
+          <span style="color:#f92672">-</span> prodDebugRuntimeElements
+          <span style="color:#f92672">-</span> prodDebugUnitTestCompile
+          <span style="color:#f92672">-</span> prodDebugUnitTestRuntime
+          <span style="color:#f92672">-</span> prodReleaseRuntime
+          <span style="color:#f92672">-</span> prodReleaseUnitTestCompile
+          <span style="color:#f92672">-</span> prodReleaseUnitTestRuntime
+        All of them match the consumer attributes<span style="color:#f92672">:</span>
+</code></pre></div><p>If I get rid of product flavors everything works fine.</p>
+<p>Still looking for the solution.</p>
+<h3 id="links">Links:</h3>
+<ul>
+<li><a href="https://docs.gradle.org/current/userguide/composite_builds.html">https://docs.gradle.org/current/userguide/composite_builds.html</a></li>
+</ul>
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/weird-android/weird-test-crash/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-10-07 17:47:01.305402 &#43;0300 EEST m=&#43;0.072805353">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
